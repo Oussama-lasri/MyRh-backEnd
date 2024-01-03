@@ -25,7 +25,8 @@ public class Recruteur {
     private String email ;
     @Column(nullable = false,unique = true)
     private String Phone ;
-    private String image;
+    @OneToOne
+    private FileEntity image;
     @OneToMany(mappedBy = "recruteur" , fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Offre> offreList ;
 }

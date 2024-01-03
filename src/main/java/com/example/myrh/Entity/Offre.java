@@ -2,12 +2,12 @@ package com.example.myrh.Entity;
 
 import com.example.myrh.Enum.Status;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Entity
+import java.util.List;
+
+@Entity(name = "offres")
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,6 +16,7 @@ public class Offre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id ;
+
     @Column(nullable = false)
     private String titre ;
 
@@ -35,11 +36,17 @@ public class Offre {
     private String profilRechecher ;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Status status ;
+
+
 
     @ManyToOne
     @JoinColumn(name = "recruteur_id")
     private Recruteur recruteur;
+
+    @OneToMany(mappedBy = "offre", fetch = FetchType.LAZY ,cascade = CascadeType.ALL)
+    private List<SoumissionOffre> soumissionList ;
 
 
 }

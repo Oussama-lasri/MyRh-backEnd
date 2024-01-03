@@ -2,12 +2,12 @@ package com.example.myrh.BaseInterface;
 
 import java.util.List;
 
-public interface IBaseService <T> {
+public interface IBaseService <DTO,Request> {
 
-    public T create(T t);
-    public T update(long id,T t);
-    public T findById(long id);
+    public DTO create(Request request);
+    public DTO update(long id,Request request);
+    public DTO findById(long id);
     public void delete(long id);
-    public List<T> findAll();
+    public List<DTO> findAll();
 
 }

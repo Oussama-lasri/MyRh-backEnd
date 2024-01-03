@@ -1,6 +1,7 @@
 package com.example.myrh.BaseInterface;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
