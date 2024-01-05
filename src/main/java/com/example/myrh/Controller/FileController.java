@@ -28,6 +28,11 @@ public class FileController {
         byte[] file = fileService.getFiles(fileName);
         return ResponseEntity.ok().contentType(MediaType.valueOf("application/pdf")).body(file);
     }
+    @GetMapping("/image/{fileName}")
+    public ResponseEntity<?> getFileImage(@PathVariable String fileName){
+        byte[] file = fileService.getFiles(fileName);
+        return ResponseEntity.ok().contentType(MediaType.valueOf("image/png")).body(file);
+    }
 
 
 }

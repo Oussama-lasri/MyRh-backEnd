@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 @RestController
+@CrossOrigin
 @RequestMapping("/api/v1/")
 public class SoummissionOffreController implements IBaseController<SoumissionOffreDTO, SoumissionOffreRequest> {
 
@@ -31,8 +32,8 @@ public class SoummissionOffreController implements IBaseController<SoumissionOff
                     .file(file)
                     .offre_id(offre_id)
                     .build();
-            SoumissionOffreDTO offreDTO = soummissionOffreService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(offreDTO);
+            SoumissionOffreDTO soumissionOffreDTOoffreDTO = soummissionOffreService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(soumissionOffreDTOoffreDTO);
     }
 
 

@@ -1,6 +1,7 @@
 package com.example.myrh.Service.Impl;
 
 import com.example.myrh.DTO.OffreDTO;
+import com.example.myrh.DTO.RecruteurDTO;
 import com.example.myrh.DTO.Request.SoumissionOffreRequest;
 import com.example.myrh.DTO.SoumissionOffreDTO;
 import com.example.myrh.Entity.FileEntity;
@@ -50,6 +51,8 @@ public class SoummissionOffreServiceImpl implements ISoummissionOffreService {
                 .build();
 
         SoumissionOffre offreCreated = soummissionOffreRepository.save(soumission);
+        //RecruteurDTO recruteurDTO = modelMapper.map(offreCreated.getOffre().getRecruteur(),RecruteurDTO.class);
+        //OffreDTO offreDTO = modelMapper.map(offreCreated.getOffre(), OffreDTO.class);
 
         return SoumissionOffreDTO.builder()
                 .offre(modelMapper.map(offreCreated.getOffre(), OffreDTO.class))

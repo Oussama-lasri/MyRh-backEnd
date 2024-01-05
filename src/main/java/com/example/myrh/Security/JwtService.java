@@ -53,12 +53,10 @@ public class JwtService {
                                 UserDetails userDetails){
         return generateToken(new HashMap<>() , userDetails);
     }
-// todo method to check if the token belongs to this User
+    // todo method to check if the token belongs to this User
     public boolean isTokenValid(String token , UserDetails userDetails){
         final String userName = extractUserEmail(token);
         return userName.equals(userDetails.getUsername()) && !isTokenExpired(token);
-
-
     }
 
     private boolean isTokenExpired(String token) {
@@ -78,6 +76,7 @@ public class JwtService {
                 setClaims(extractClaims)
                 .setSubject(userDetails.
                         getUsername())
+                .claim("authorities", userDetails.getAuthorities())
                 // help us to check if the token is still valid or not
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000*60*24))

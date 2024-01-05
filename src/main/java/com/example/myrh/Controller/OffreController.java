@@ -8,14 +8,12 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/v1/offres")
 public class OffreController implements IBaseController<OffreDTO, OffreRequest> {
 
@@ -33,14 +31,16 @@ public class OffreController implements IBaseController<OffreDTO, OffreRequest> 
     }
 
     @Override
+    @GetMapping
     public ResponseEntity<List<OffreDTO>> getAll() {
 
-        return null;
+        return ResponseEntity.status(HttpStatus.OK).body(offreService.findAll());
     }
 
     @Override
-    public ResponseEntity<OffreDTO> getById(long id) {
-        return null;
+    @GetMapping("/{id}")
+    public ResponseEntity<OffreDTO> getById(@PathVariable long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(offreService.findById(id));
     }
 
     @Override

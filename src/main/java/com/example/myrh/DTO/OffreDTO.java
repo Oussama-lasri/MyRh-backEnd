@@ -37,5 +37,5 @@ public class OffreDTO {
     private RecruteurDTO recruteur;
 
 
-    private List<SoumissionOffre> soumissionList ;
+    //private List<SoumissionOffre> soumissionList ;
 }
