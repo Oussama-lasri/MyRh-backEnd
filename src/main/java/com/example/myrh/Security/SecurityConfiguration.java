@@ -32,8 +32,9 @@ public class SecurityConfiguration {
     //private final LogoutHandler logoutHandler;
 
     private static final String[] WHITE_LIST_URL = {
-            "/api/v1/**",
+           // "/api/v1/**",
             "/api/v1/auth/**",
+            "/api/v1/recruteurs/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -54,7 +55,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                                     req.requestMatchers(WHITE_LIST_URL)
                                     .permitAll()
-                                    .anyRequest()
+                                    .requestMatchers("api/v1/offres")
+
                                     .authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

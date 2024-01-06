@@ -4,15 +4,19 @@ import com.example.myrh.DTO.RecruteurDTO;
 import com.example.myrh.DTO.Request.RecruteurRequest;
 import com.example.myrh.Entity.FileEntity;
 import com.example.myrh.Entity.Recruteur;
+import com.example.myrh.Enum.Role;
 import com.example.myrh.Error.ErrorMessagesRecruteur;
 import com.example.myrh.Exception.RecruteurException;
 import com.example.myrh.Repository.RecruteurRepository;
+import com.example.myrh.Security.JwtService;
 import com.example.myrh.Service.IFileService;
 import com.example.myrh.Service.IRecruteurService;
+import com.example.myrh.auth.AuthenticationResponse;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,13 +30,17 @@ public class RecruteurServiceImpl implements IRecruteurService {
     private static final Logger logger = LoggerFactory.getLogger(RecruteurServiceImpl.class.getName());
 
     private final RecruteurRepository recruteurRepository;
+    private final PasswordEncoder passwordEncoder ;
     private final ModelMapper modelMapper;
     private final IFileService fileService;
+    private final JwtService jwtService ;
     @Autowired
-    RecruteurServiceImpl(RecruteurRepository recruteurRepository, ModelMapper modelMapper, IFileService fileService){
+    RecruteurServiceImpl(RecruteurRepository recruteurRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, IFileService fileService, JwtService jwtService){
         this.recruteurRepository = recruteurRepository ;
+        this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
         this.fileService = fileService;
+        this.jwtService = jwtService;
     }
     @Override
     public RecruteurDTO create(RecruteurRequest  recruteurRequest) {
@@ -76,5 +84,37 @@ public class RecruteurServiceImpl implements IRecruteurService {
     @Override
     public List<RecruteurDTO> findAll() {
         return null;
+    }
+
+
+    public AuthenticationResponse register(RecruteurRequest recruteurRequest){
+
+        Optional<Recruteur> recruteurCheck = recruteurRepository.findByEmail(recruteurRequest.getEmail());
+        if (recruteurCheck.isPresent()){
+            throw new RecruteurException(ErrorMessagesRecruteur.EMAIL_ALREADY_EXIST.getErrorMessage());
+        }
+        FileEntity image = null;
+        try{
+            image = fileService.storeFile(recruteurRequest.getImage());
+            logger.info("created image successfully");
+        }catch (Exception ex){
+            logger.warn("error image => " + ex.getMessage());
+        }
+        var recruteur = Recruteur.builder()
+                .email(recruteurRequest.getEmail())
+                .password(passwordEncoder.encode(recruteurRequest.getPassword()))
+                .login(recruteurRequest.getLogin())
+                .image(image)
+                .role(Role.RECRUTEUR)
+                .Phone(recruteurRequest.getPhone())
+                .build();
+
+
+        recruteurRepository.save(recruteur);
+        var jwtToken = jwtService.generateToken(recruteur);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
+
     }
 }

@@ -24,11 +24,10 @@ import java.util.function.Function;
 public class JwtService {
 
     JwtService(){
-        initializeKeyPair();
+   initializeKeyPair();
     }
     private KeyPair keyPair;
-    //private static final String KeyPair =
-      //      "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcwNDE5NDc2NywiaWF0IjoxNzA0MTk0NzY3fQ.AaaX-zHwoBpHKAyKlF5GtPSgEmyFibPpyT6TeyVJg14";
+//    private static final String secretKey ="404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
 
     private void initializeKeyPair() {
@@ -69,14 +68,12 @@ public class JwtService {
 
     public String generateToken(Map<String , Object> extractClaims,
                                 UserDetails userDetails){
-        if (keyPair == null) {
-            throw new RuntimeException("ECDSA key pair is not initialized");
-        }
+
         return Jwts.builder().
                 setClaims(extractClaims)
                 .setSubject(userDetails.
                         getUsername())
-                .claim("authorities", userDetails.getAuthorities())
+                //.claim("authorities", userDetails.getAuthorities())
                 // help us to check if the token is still valid or not
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000*60*24))
@@ -98,7 +95,7 @@ public class JwtService {
     }
 
 //    private Key getSignInKey() {
-//            byte[] keyBytes = Decoders.BASE64.decode();
+//            byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 //        return Keys.hmacShaKeyFor(keyBytes);
 //    }
 }

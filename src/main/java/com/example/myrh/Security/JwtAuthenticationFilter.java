@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter  {
         final String jwt ;
         final String userEmail ;
 
-        logger.warn(String.valueOf(request));
+        logger.warn(String.valueOf(request.getLocalName()));
         logger.warn(String.valueOf(response));
         logger.warn(String.valueOf(filterChain));
 
@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter  {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
-
+        logger.info("salaaat");
         filterChain.doFilter(request, response);
     }
 }

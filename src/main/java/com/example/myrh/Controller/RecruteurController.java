@@ -3,7 +3,10 @@ package com.example.myrh.Controller;
 import com.example.myrh.BaseInterface.IBaseController;
 import com.example.myrh.DTO.RecruteurDTO;
 import com.example.myrh.DTO.Request.RecruteurRequest;
+import com.example.myrh.Entity.Recruteur;
 import com.example.myrh.Service.IRecruteurService;
+import com.example.myrh.Service.Impl.RecruteurServiceImpl;
+import com.example.myrh.auth.AuthenticationResponse;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +22,10 @@ import java.util.List;
 @RequestMapping("api/v1/recruteurs")
 public class RecruteurController implements IBaseController<RecruteurDTO, RecruteurRequest> {
 
-    private final IRecruteurService recruteurService ;
+    private final RecruteurServiceImpl recruteurService ;
     private final ModelMapper modelMapper ;
     @Autowired
-    public RecruteurController(IRecruteurService recruteurService, ModelMapper modelMapper) {
+    public RecruteurController(RecruteurServiceImpl recruteurService, ModelMapper modelMapper) {
         this.recruteurService = recruteurService;
         this.modelMapper = modelMapper;
     }
@@ -51,5 +54,12 @@ public class RecruteurController implements IBaseController<RecruteurDTO, Recrut
     @Override
     public ResponseEntity<?> delete(long id) {
         return null;
+    }
+
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthenticationResponse> register(@ModelAttribute @Valid  RecruteurRequest recruteurRequest){
+        return ResponseEntity.status(HttpStatus.CREATED).body(recruteurService.register(recruteurRequest));
+
     }
 }
