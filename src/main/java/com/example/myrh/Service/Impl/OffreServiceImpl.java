@@ -96,9 +96,12 @@ public class OffreServiceImpl implements IOffreService {
         List<OffreDTO> listOffre = offreRepository.findAll().stream().map(offre->{
                     OffreDTO offreDTO = modelMapper.map(offre,OffreDTO.class);
                     offreDTO.setRecruteur(modelMapper.map(offre.getRecruteur(),RecruteurDTO.class));
-                    return offreDTO ;
-                }
+                    return offreDTO ;}
                 ).toList();
+
+        if (listOffre.isEmpty()){
+            throw new OffreException("not found");
+        }
         return listOffre;
     }
 }

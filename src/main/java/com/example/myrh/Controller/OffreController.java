@@ -33,7 +33,6 @@ public class OffreController implements IBaseController<OffreDTO, OffreRequest> 
     @Override
     @GetMapping
     public ResponseEntity<List<OffreDTO>> getAll() {
-
         return ResponseEntity.status(HttpStatus.OK).body(offreService.findAll());
     }
 

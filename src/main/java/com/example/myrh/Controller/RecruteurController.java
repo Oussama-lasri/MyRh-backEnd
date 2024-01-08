@@ -3,11 +3,13 @@ package com.example.myrh.Controller;
 import com.example.myrh.BaseInterface.IBaseController;
 import com.example.myrh.DTO.RecruteurDTO;
 import com.example.myrh.DTO.Request.RecruteurRequest;
+import com.example.myrh.DTO.Request.ValidationRequest;
 import com.example.myrh.Entity.Recruteur;
 import com.example.myrh.Service.IRecruteurService;
 import com.example.myrh.Service.Impl.RecruteurServiceImpl;
 import com.example.myrh.auth.AuthenticationResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,4 +64,12 @@ public class RecruteurController implements IBaseController<RecruteurDTO, Recrut
         return ResponseEntity.status(HttpStatus.CREATED).body(recruteurService.register(recruteurRequest));
 
     }
+    @PostMapping("/validateCode")
+    public ResponseEntity<?> validationCompte(@RequestBody ValidationRequest validationRequest){
+        if(recruteurService.validationEmail(validationRequest.getEmail(),validationRequest.getCodeValidation()))
+            return ResponseEntity.status(HttpStatus.OK).body("validate");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("date expirated or code not correct");
+    }
+
+
 }
