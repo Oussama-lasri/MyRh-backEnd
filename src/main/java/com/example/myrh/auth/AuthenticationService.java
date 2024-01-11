@@ -22,6 +22,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -64,12 +66,6 @@ public class AuthenticationService {
                             request.getPassword()
                     )
             );
-            log.info("authenticationManager: {}", authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
-                    )
-            ).getDetails());
         } catch (AuthenticationException e) {
             log.warn("Authentication failed =>" + e.getMessage());
             throw new RuntimeException("Authentication failed: " + e.getMessage(), e);
@@ -80,14 +76,26 @@ public class AuthenticationService {
 
 
         var user = checkUser(request.getEmail());
-        var jwtToken = jwtService.generateToken(user);
+        Map<String , Object> hashMap = new HashMap<>();
+       if(user instanceof  Recruteur){
+           long id = ((Recruteur) user).getId();
+           hashMap.put("recruteur",id);
+       } else if (user instanceof  UserEntity) {
+           long id = ((UserEntity) user).getId();
+           hashMap.put("user",id);
+       }else {
+           long id = ((Agent) user).getId();
+           hashMap.put("agent",id);
+       }
+
+        var jwtToken = jwtService.generateToken(hashMap,(UserDetails) user);
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
     }
 
-    private UserDetails checkUser(String username) {
+    private Object checkUser(String username) {
         Optional<Agent> agent = agentRepository.findByEmail(username);
         if (agent.isPresent()) {
             return agent.get();

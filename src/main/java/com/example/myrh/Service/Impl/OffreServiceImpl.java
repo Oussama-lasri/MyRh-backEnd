@@ -3,7 +3,6 @@ package com.example.myrh.Service.Impl;
 import com.example.myrh.DTO.OffreDTO;
 import com.example.myrh.DTO.RecruteurDTO;
 import com.example.myrh.DTO.Request.OffreRequest;
-import com.example.myrh.Entity.FileEntity;
 import com.example.myrh.Entity.Offre;
 import com.example.myrh.Entity.Recruteur;
 import com.example.myrh.Error.ErrorMessageGeneral;
@@ -11,16 +10,16 @@ import com.example.myrh.Exception.OffreException;
 import com.example.myrh.Exception.RecruteurException;
 import com.example.myrh.Repository.OffreRepository;
 import com.example.myrh.Repository.RecruteurRepository;
-import com.example.myrh.Service.IFileService;
+import com.example.myrh.Security.JwtService;
 import com.example.myrh.Service.IOffreService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OffreServiceImpl implements IOffreService {
@@ -28,22 +27,21 @@ public class OffreServiceImpl implements IOffreService {
     private final OffreRepository offreRepository;
     private final RecruteurRepository recruteurRepository ;
     private final ModelMapper modelMapper ;
+    private final JwtService jwtService ;
 
-    @Autowired
-    public OffreServiceImpl(OffreRepository offreRepository, RecruteurRepository recruteurRepository, ModelMapper modelMapper) {
+
+    public OffreServiceImpl(OffreRepository offreRepository, RecruteurRepository recruteurRepository, ModelMapper modelMapper, JwtService jwtService) {
         this.offreRepository = offreRepository;
         this.recruteurRepository = recruteurRepository;
         this.modelMapper = modelMapper;
 
+        this.jwtService = jwtService;
     }
 
-    @Override
-    public OffreDTO create(OffreRequest offreRequest) {
+    public OffreDTO createOffre(OffreRequest offreRequest , String authorizationHeader) {
         Recruteur recruteur = recruteurRepository.findById(offreRequest.getRecruteur_id()).orElseThrow(()->
                 new RecruteurException(ErrorMessageGeneral.NO_RECORD_FOUND.getErrorMessage())
                 );
-
-
         Offre offre = modelMapper.map(offreRequest,Offre.class);
         offre.setRecruteur(recruteur);
         Offre offreCreated = null ;
@@ -57,7 +55,12 @@ public class OffreServiceImpl implements IOffreService {
 
         OffreDTO offreDTO = modelMapper.map(offreCreated,OffreDTO.class);
         offreDTO.setRecruteur(modelMapper.map(offreCreated.getRecruteur(), RecruteurDTO.class));
-        return offreDTO ;
+        return offreDTO;
+    }
+
+    @Override
+    public OffreDTO create(OffreRequest offreRequest) {
+        return null;
     }
 
     @Override

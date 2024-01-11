@@ -24,7 +24,7 @@ import java.util.function.Function;
 public class JwtService {
 
     JwtService(){
-   initializeKeyPair();
+        initializeKeyPair();
     }
     private KeyPair keyPair;
 //    private static final String secretKey ="404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
@@ -49,7 +49,7 @@ public class JwtService {
     }
 
     public String generateToken(
-                                UserDetails userDetails){
+            UserDetails userDetails){
         return generateToken(new HashMap<>() , userDetails);
     }
     // todo method to check if the token belongs to this User
@@ -73,13 +73,12 @@ public class JwtService {
                 setClaims(extractClaims)
                 .setSubject(userDetails.
                         getUsername())
-                //.claim("authorities", userDetails.getAuthorities())
+                .claim("authorities", userDetails.getAuthorities())
                 // help us to check if the token is still valid or not
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000*60*24))
                 .signWith(keyPair.getPrivate(), SignatureAlgorithm.ES256)
                 .compact();
-
 
     }
 

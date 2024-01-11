@@ -23,8 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -124,12 +123,13 @@ public class RecruteurServiceImpl implements IRecruteurService {
         emailService.sendSimpleMessage(recruteur.getEmail(),"code confirmation","code confirmation : "+recruteur.getCodeValidation());
         logger.warn("send code => " + recruteur.getCodeValidation() );
 
-        recruteurRepository.save(recruteur);
-        var jwtToken = jwtService.generateToken(recruteur);
+        var rec = recruteurRepository.save(recruteur);
+        Map<String, Object> Map = new HashMap<>();
+        Map.put("recruteur",rec.getId());
+        var jwtToken = jwtService.generateToken(Map,recruteur);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
-
     }
 
     public boolean validationEmail(String email , int codeValidation){

@@ -4,6 +4,7 @@ import com.example.myrh.BaseInterface.IBaseController;
 import com.example.myrh.DTO.OffreDTO;
 import com.example.myrh.DTO.Request.OffreRequest;
 import com.example.myrh.Service.IOffreService;
+import com.example.myrh.Service.Impl.OffreServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,16 +18,16 @@ import java.util.List;
 @RequestMapping("api/v1/offres")
 public class OffreController implements IBaseController<OffreDTO, OffreRequest> {
 
-    private final IOffreService offreService ;
+    private final OffreServiceImpl offreService ;
     @Autowired
-    public OffreController(IOffreService offreService) {
+    public OffreController(OffreServiceImpl offreService) {
         this.offreService = offreService;
     }
 
-    @Override
     @PostMapping
-    public ResponseEntity<OffreDTO> create(@RequestBody @Valid OffreRequest request) {
-        OffreDTO Offre = offreService.create(request);
+    public ResponseEntity<OffreDTO> createOffre(@RequestBody @Valid OffreRequest request ,@RequestHeader("Authorization") String authorizationHeader) {
+
+        OffreDTO Offre = offreService.createOffre(request,authorizationHeader);
         return ResponseEntity.status(HttpStatus.CREATED).body(Offre);
     }
 
@@ -49,6 +50,12 @@ public class OffreController implements IBaseController<OffreDTO, OffreRequest> 
 
     @Override
     public ResponseEntity<?> delete(long id) {
+        return null;
+    }
+
+
+    @Override
+    public ResponseEntity<OffreDTO> create(@RequestBody @Valid OffreRequest request ) {
         return null;
     }
 }

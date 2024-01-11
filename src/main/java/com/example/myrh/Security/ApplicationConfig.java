@@ -35,8 +35,6 @@ public class ApplicationConfig {
 
 
         return username -> {
-
-
 //            Optional<UserEntity> userEntity = userRepository.findByEmail(username);
 //            if (userEntity.isPresent()) {
 //                return userEntity.get();

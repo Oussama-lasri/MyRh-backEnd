@@ -36,16 +36,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter  {
         final String jwt ;
         final String userEmail ;
 
-        logger.warn(String.valueOf(request.getLocalName()));
-        logger.warn(String.valueOf(response));
-        logger.warn(String.valueOf(filterChain));
+
+//        logger.warn(String.valueOf(request.getLocalName()));
+//        logger.warn(String.valueOf(response));
+//        logger.warn(String.valueOf(filterChain));
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request , response);
             return;
         }
+        logger.info(authHeader);
 
         jwt = authHeader.substring(7);
+        logger.info(jwt);
+
         // todo extract the userEmail from JWT token
         userEmail = jwtService.extractUserEmail(jwt);
         // params 2 means the user is not has Authentication
