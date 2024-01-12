@@ -37,7 +37,7 @@ public class SecurityConfiguration {
             "/api/v1/auth/**",
             "/api/v1/recruteurs/**",
             "/api/v1/recruteurs/validateCode",
-            "api/v1/offres"
+            "/api/v1/offres/**"
 
     };
 
@@ -50,7 +50,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                                     req.requestMatchers(WHITE_LIST_URL)
                                     .permitAll()
-                                    .requestMatchers(HttpMethod.POST,"api/v1/offres")
+                                    .requestMatchers(HttpMethod.POST,"api/v1/offres").hasRole("RECRUTEUR")
+                                            .anyRequest()
                                     .authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
